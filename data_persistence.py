@@ -12,13 +12,7 @@ class DataPersistence:
             writer = csv.writer(f)
             writer.writerow(['movie_id','movie_name','country_name','duration','genre','rating'])
             for movie in movies_list:
-                writer.writerow([movie._movieid, movie._name, movie._country_name, movie._duration, movie._genre, movie._rating])
-
-dp = DataPersistence()
-for row in dp.read_dictionary:
-    for item in row:
-        print(type(item))
-
+                writer.writerow([movie.get_id(), movie.get_name(), movie.get_country_name(), movie.get_duration(), movie.get_genre(), movie.get_rating()])
     
     
     

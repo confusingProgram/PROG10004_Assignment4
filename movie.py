@@ -13,7 +13,7 @@ class Movie:
     def get_name(self):
         return self._movie_name
 
-    def get_country(self):
+    def get_country_name(self):
         return self._country_name
 
     def get_duration(self):
