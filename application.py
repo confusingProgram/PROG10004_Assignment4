@@ -38,15 +38,7 @@ def add_movie():
             movie_id_entry.insert(0,"Entry Created.")
     except Exception as e:
         empty()
-        movie_id_entry.insert(0,"Invalid Entry.")
-    
-def display_all():
-    display_box.delete("1.0", "end")
-    for movie in manager.get_movies():
-        id = movie.get_id()
-        name = movie.get_name()
-        string = f"{id} - {name} \n"
-        display_box.insert(INSERT, string)
+        movie_id_entry.insert(0,"Invalid Entry.")  
 
 def update_movie():
     try:
@@ -54,18 +46,23 @@ def update_movie():
         duplicate = False
         for movie in manager.get_movies():
             if int(movie.get_id()) == id:
-                manager.update(movie_id_entry.get(),
+                duplicate = True
+                break
+        if duplicate == False:
+            raise Exception
+        elif movie_id_entry.get() == "" or movie_name_entry.get() == "" or country_name_entry.get() == "":
+            raise Exception
+        elif duration_entry.get() == "" or genre_entry.get() == "" or rating_entry.get() == "":
+            raise Exception
+        else:
+            manager.update(movie_id_entry.get(),
                                 movie_name_entry.get(),
                                 country_name_entry.get(),
                                 duration_entry.get(),
                                 genre_entry.get(),
                                 rating_entry.get())
-                empty()
-                movie_id_entry.insert(0,"Entry Updated.")
-                duplicate = True
-                break
-        if duplicate == False:
-            raise Exception
+            empty()
+            movie_id_entry.insert(0,"Entry Updated.")    
                 
     except Exception as e:
         empty()
@@ -78,7 +75,7 @@ def delete_movie():
         duplicate = False
         for movie in manager.get_movies():
             if int(movie.get_id()) == id:
-                manager.delete_movie(movie._movie_id)
+                manager.delete(movie.get_id())
                 empty()
                 movie_id_entry.insert(0,"Entry Deleted.")
                 duplicate = True
@@ -88,19 +85,31 @@ def delete_movie():
     except Exception as e:
         empty()
         movie_id_entry.insert(0,"Invalid answer.")
-    pass
-
-def find_movie():
-    if option.get() == 0: # By ID
-        pass
-    elif option.get() == 1: # By Name
-        pass
-    pass
 
 def save():
-    pass
+    manager.save()
 
+def display_all():
+    display_box.delete("1.0", "end")
+    for movie in manager.get_movies():
+        id = movie.get_id()
+        name = movie.get_name()
+        string = f"{id} - {name} \n"
+        display_box.insert(INSERT, string)
 
+def find_movie():
+    movie = manager.find_movie(option.get(), find_movie_entry.get())
+    if movie == False:
+        find_movie_entry.delete(0, END)
+        find_movie_entry.insert(0,"Invalid Entry.")
+
+    empty()
+    movie_id_entry.insert(0, movie.get_id())
+    movie_name_entry.insert(0, movie.get_name())
+    country_name_entry.insert(0, movie.get_country_name())
+    duration_entry.insert(0, movie.get_duration())
+    genre_entry.insert(0, movie.get_genre())
+    rating_entry.insert(0, movie.get_rating())
 
 
 manager = MovieManagement()
@@ -137,7 +146,7 @@ font(country_name_entry)
 country_name_entry.place(x=150, y=200)
 
 #Duration
-duration_label = Label(root, text="Duration")
+duration_label = Label(root, text="Duration (minutes)")
 font(duration_label)
 duration_label.place(x=0, y=275)
 duration_entry = Entry(root, text="")
