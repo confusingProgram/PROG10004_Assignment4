@@ -6,7 +6,7 @@ class MovieManagement:
     def __init__(self):
         self._movies = []
         self._file = DataPersistence()
-        for row in self._file.read_dictionary:
+        for row in self._file._read_data:
             self._movies.append(Movie(row['movie_id'], row['movie_name'], row['country_name'],
                                       row['duration'], row['genre'], row['rating']))
         
@@ -31,11 +31,11 @@ class MovieManagement:
     def find_movie(self, option, entry):
         if option == 0:
             for movie in self._movies:
-                if entry == movie._movie_id:
+                if entry == movie.get_id():
                     return movie
         elif option == 1:
             for movie in self._movies:
-                if entry == movie._movie_name:
+                if entry == movie.get_name():
                     return movie
         return False
                 
