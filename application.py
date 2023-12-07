@@ -122,7 +122,7 @@ def find_movie():
     country_name_entry.insert(0, movie.get_country_name())
     duration_entry.insert(0, movie.get_duration())
     genre_entry.insert(0, movie.get_genre())
-    rating_entry.insert(0, movie.get_rating())
+    rating_entry.insert(0, movie.get_rating().upper())
 
 """
 manager = MovieManagement()
