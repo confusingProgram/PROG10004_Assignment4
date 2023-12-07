@@ -4,6 +4,7 @@ from movie_management import MovieManagement
 def font(widget):
     widget.config(font=('Papyrus', 12))
 
+# Empties main entry widgets.
 def empty():
         movie_id_entry.delete(0, END)
         movie_name_entry.delete(0, END)
@@ -12,88 +13,101 @@ def empty():
         genre_entry.delete(0, END)
         rating_entry.delete(0, END)
 
+# Searches movie_management for movie with ID in movie_id_entry. Returns Movie if exists, False if does not exist.
+def search_management():
+    return manager.find_movie(0, movie_id_entry.get())
+
 def add_movie():
     try:
-        id = int(movie_id_entry.get())
-        duplicate = False
-        for movie in manager.get_movies():
-            if int(movie.get_id()) == id:
-                duplicate = True
+        movie = search_management() # Returns either Movie or False
+        if movie != False: # Checks if not False, i.e., Movie with ID already exists, reject.
+            raise Exception
+        elif int(movie_id_entry.get()) < 1: # Movie IDs must not be 0 or lower.
+            raise Exception
+        elif int(duration_entry.get()) < 1: # Movie duration must not be 0 or lower.
+            raise Exception
+
+        ratings = ["G", "PG", "14A", "18A", "R"] # Checks that rating is valid.
+        for rating in ratings:
+            if rating_entry.get().upper() == rating:
                 break
-        if duplicate:
-            raise Exception
-        elif movie_id_entry.get() == "" or movie_name_entry.get() == "" or country_name_entry.get() == "":
-            raise Exception
-        elif duration_entry.get() == "" or genre_entry.get() == "" or rating_entry.get() == "":
-            raise Exception
         else:
-            manager.add(movie_id_entry.get(),
+            raise Exception
+        
+        for widget in main_entry_widgets: # Checks that entry widgets are not empty.
+            if widget.get() == "":
+                raise Exception
+        
+        manager.add(movie_id_entry.get(), # If passed, entry values are passed to movie_management
                                 movie_name_entry.get(),
                                 country_name_entry.get(),
                                 duration_entry.get(),
                                 genre_entry.get(),
-                                rating_entry.get())
-            empty()
-            movie_id_entry.insert(0,"Entry Created.")
+                                rating_entry.get().upper())
+        empty()
+        movie_id_entry.insert(0,"Entry Created.")
+
     except Exception as e:
         empty()
         movie_id_entry.insert(0,"Invalid Entry.")  
 
 def update_movie():
     try:
-        id = int(movie_id_entry.get())
-        duplicate = False
-        for movie in manager.get_movies():
-            if int(movie.get_id()) == id:
-                duplicate = True
+        movie = search_management() # Returns either Movie, or False. Will throw error if non-int or <1.
+        if movie == False: # Checks that ID is 0, i.e., does not exist.
+            raise Exception
+        elif int(duration_entry.get()) < 1: # Movie duration must not be 0 or lower.
+            raise Exception
+
+        ratings = ["G", "PG", "14A", "18A", "R"] # Checks that rating is valid.
+        for rating in ratings:
+            if rating_entry.get().upper() == rating:
                 break
-        if duplicate == False:
-            raise Exception
-        elif movie_id_entry.get() == "" or movie_name_entry.get() == "" or country_name_entry.get() == "":
-            raise Exception
-        elif duration_entry.get() == "" or genre_entry.get() == "" or rating_entry.get() == "":
-            raise Exception
         else:
-            manager.update(movie_id_entry.get(),
-                                movie_name_entry.get(),
-                                country_name_entry.get(),
-                                duration_entry.get(),
-                                genre_entry.get(),
-                                rating_entry.get())
-            empty()
-            movie_id_entry.insert(0,"Entry Updated.")    
-                
+            raise Exception
+
+        for widget in main_entry_widgets: # Checks that entry widgets are not empty.
+            if widget.get() == "":
+                raise Exception
+
+        manager.update(movie_id_entry.get(), # If passed, entry values are passed to movie_management
+                            movie_name_entry.get(),
+                            country_name_entry.get(),
+                            duration_entry.get(),
+                            genre_entry.get(),
+                            rating_entry.get().upper())
+        empty()
+        movie_id_entry.insert(0,"Entry Updated.")    
+
     except Exception as e:
         empty()
         movie_id_entry.insert(0,"Invalid Entry.")
 
 def delete_movie():
     try:
-        id = int(movie_id_entry.get())
-        print(id)
-        duplicate = False
-        for movie in manager.get_movies():
-            if int(movie.get_id()) == id:
-                manager.delete(movie.get_id())
-                empty()
-                movie_id_entry.insert(0,"Entry Deleted.")
-                duplicate = True
-                break
-        if duplicate == False:
+        movie = search_management()
+        if movie == False: # Checks that movie is False, i.e., does not exist.
             raise Exception
+
+        manager.delete(movie_id_entry.get())
+        empty()
+        movie_id_entry.insert(0,"Entry Deleted.")
+
     except Exception as e:
         empty()
         movie_id_entry.insert(0,"Invalid answer.")
 
 def save():
+    manager.sort()
     manager.save()
+    empty()
+    movie_id_entry.insert(0,"Saved.")
 
 def display_all():
+    manager.sort()
     display_box.delete("1.0", "end")
     for movie in manager.get_movies():
-        id = movie.get_id()
-        name = movie.get_name()
-        string = f"{id} - {name} \n"
+        string = f"{movie.get_movie_id()} - {movie.get_movie_name()} \n"
         display_box.insert(INSERT, string)
 
 def find_movie():
@@ -103,8 +117,8 @@ def find_movie():
         find_movie_entry.insert(0,"Invalid Entry.")
 
     empty()
-    movie_id_entry.insert(0, movie.get_id())
-    movie_name_entry.insert(0, movie.get_name())
+    movie_id_entry.insert(0, movie.get_movie_id())
+    movie_name_entry.insert(0, movie.get_movie_name())
     country_name_entry.insert(0, movie.get_country_name())
     duration_entry.insert(0, movie.get_duration())
     genre_entry.insert(0, movie.get_genre())
@@ -136,6 +150,7 @@ find_movie_entry = Entry()
 find_movie_button = Button()
 by_id_radiobutton = Radiobutton()
 by_name_radiobutton = Radiobutton()
+main_entry_widgets = []
 """
 
 manager = MovieManagement()
@@ -166,7 +181,7 @@ font(movie_name_entry)
 movie_name_entry.place(x=150, y=125)
 
 #Country_Name
-country_name_label = Label(root, text="Country_Name")
+country_name_label = Label(root, text="Country Name")
 font(country_name_label)
 country_name_label.place(x=0, y=200)
 
@@ -248,4 +263,6 @@ by_name_radiobutton = Radiobutton(root, text="By Name", variable=option, value=1
 by_name_radiobutton.place(x=450, y=650)
 font(by_name_radiobutton)
 
+main_entry_widgets = [movie_id_entry, movie_name_entry, country_name_entry, 
+                            duration_entry, genre_entry, rating_entry]
 root.mainloop()
