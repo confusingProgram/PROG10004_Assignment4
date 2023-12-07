@@ -15,7 +15,7 @@ def empty():
 
 # Searches movie_management for movie with ID in movie_id_entry. Returns Movie if exists, False if does not exist.
 def search_management():
-    return manager.find_movie(0, movie_id_entry.get())
+    return manager.find_movie(0, movie_id_entry.get().strip())
 
 def add_movie():
     try:
@@ -29,7 +29,7 @@ def add_movie():
 
         ratings = ["G", "PG", "14A", "18A", "R"] # Checks that rating is valid.
         for rating in ratings:
-            if rating_entry.get().upper() == rating:
+            if rating_entry.get().strip().upper() == rating:
                 break
         else:
             raise Exception
@@ -38,12 +38,12 @@ def add_movie():
             if widget.get() == "":
                 raise Exception
         
-        manager.add(movie_id_entry.get(), # If passed, entry values are passed to movie_management
-                                movie_name_entry.get(),
-                                country_name_entry.get(),
-                                duration_entry.get(),
-                                genre_entry.get(),
-                                rating_entry.get().upper())
+        manager.add(movie_id_entry.get().strip(), # If passed, entry values are passed to movie_management
+                                movie_name_entry.get().strip(),
+                                country_name_entry.get().strip(),
+                                duration_entry.get().strip(),
+                                genre_entry.get().strip(),
+                                rating_entry.get().strip().upper())
         empty()
         movie_id_entry.insert(0,"Entry Created.")
 
@@ -56,12 +56,12 @@ def update_movie():
         movie = search_management() # Returns either Movie, or False. Will throw error if non-int or <1.
         if movie == False: # Checks that ID is 0, i.e., does not exist.
             raise Exception
-        elif int(duration_entry.get()) < 1: # Movie duration must not be 0 or lower.
+        elif int(duration_entry.get().strip()) < 1: # Movie duration must not be 0 or lower.
             raise Exception
 
         ratings = ["G", "PG", "14A", "18A", "R"] # Checks that rating is valid.
         for rating in ratings:
-            if rating_entry.get().upper() == rating:
+            if rating_entry.get().strip().upper() == rating:
                 break
         else:
             raise Exception
@@ -70,12 +70,12 @@ def update_movie():
             if widget.get() == "":
                 raise Exception
 
-        manager.update(movie_id_entry.get(), # If passed, entry values are passed to movie_management
-                            movie_name_entry.get(),
-                            country_name_entry.get(),
-                            duration_entry.get(),
-                            genre_entry.get(),
-                            rating_entry.get().upper())
+        manager.update(movie_id_entry.get().strip(), # If passed, entry values are passed to movie_management
+                            movie_name_entry.get().strip(),
+                            country_name_entry.get().strip(),
+                            duration_entry.get().strip(),
+                            genre_entry.get().strip(),
+                            rating_entry.get().strip().upper())
         empty()
         movie_id_entry.insert(0,"Entry Updated.")    
 
@@ -89,7 +89,7 @@ def delete_movie():
         if movie == False: # Checks that movie is False, i.e., does not exist.
             raise Exception
 
-        manager.delete(movie_id_entry.get())
+        manager.delete(movie_id_entry.get().strip())
         empty()
         movie_id_entry.insert(0,"Entry Deleted.")
 
@@ -111,7 +111,7 @@ def display_all():
         display_box.insert(INSERT, string)
 
 def find_movie():
-    movie = manager.find_movie(option.get(), find_movie_entry.get())
+    movie = manager.find_movie(option.get(), find_movie_entry.get().strip())
     if movie == False:
         find_movie_entry.delete(0, END)
         find_movie_entry.insert(0,"Invalid Entry.")
@@ -139,6 +139,12 @@ duration_entry = Entry()
 genre_label = Label()
 genre_entry = Entry()
 rating_label = Label()
+rating_guideA_label = Label()
+rating_guideB_label = Label()
+rating_guideC_label = Label()
+rating_guideD_label = Label()
+rating_guideE_label = Label()
+rating_guideF_label = Label()
 rating_entry = Entry()
 add_movie_button = Button()
 update_movie_button = Button()
@@ -215,6 +221,31 @@ rating_label.place(x=0, y=425)
 rating_entry = Entry(root, text="")
 font(rating_entry)
 rating_entry.place(x=150, y=425)
+
+rating_guideA_label = Label(root, text="Rating Guide")
+font(rating_guideA_label)
+rating_guideA_label.place(x=0, y=500)
+
+rating_guideB_label = Label(root, text="- G")
+font(rating_guideB_label)
+rating_guideB_label.place(x=0, y=525)
+
+rating_guideC_label = Label(root, text="- PG")
+font(rating_guideC_label)
+rating_guideC_label.place(x=0, y=550)
+
+rating_guideD_label = Label(root, text="- 14A")
+font(rating_guideD_label)
+rating_guideD_label.place(x=0, y=575)
+
+rating_guideE_label = Label(root, text="- 18A")
+font(rating_guideE_label)
+rating_guideE_label.place(x=0, y=600)
+
+rating_guideF_label = Label(root, text="- R")
+font(rating_guideF_label)
+rating_guideF_label.place(x=0, y=625)
+
 
 #Add_Movie_Button
 add_movie_button = Button(root, text="Add Movie", command=add_movie)
