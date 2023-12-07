@@ -12,5 +12,5 @@ class DataPersistence:
             writer = csv.writer(f)
             writer.writerow(['movie_id','movie_name','country_name','duration','genre','rating'])
             for movie in movies_list:
-                writer.writerow([movie.get_id(), movie.get_name(), movie.get_country_name(), movie.get_duration(), movie.get_genre(), movie.get_rating()])
+                writer.writerow([movie.get_movie_id(), movie.get_movie_name(), movie.get_country_name(), movie.get_duration(), movie.get_genre(), movie.get_rating()])
     
