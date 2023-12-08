@@ -74,4 +74,4 @@ class MovieManagement:
         self._file.save(self._movies)
 
     def sort(self):
-        self._movies = sorted(self._movies, key=lambda movie: movie._movie_id)
+        self._movies = sorted(self._movies, key=lambda movie: int(movie._movie_id))
