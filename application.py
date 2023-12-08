@@ -1,4 +1,6 @@
 from tkinter import *
+from tkinter import ttk
+import movie_management
 from movie_management import MovieManagement
 
 def font(widget):
@@ -15,7 +17,7 @@ def empty():
 
 # Searches movie_management for movie with ID in movie_id_entry. Returns Movie if exists, False if does not exist.
 def search_management():
-    return manager.find_movie(0, movie_id_entry.get().strip())
+    return manager.find_movie("ID", movie_id_entry.get().strip())
 
 def add_movie():
     try:
@@ -105,24 +107,39 @@ def save():
 
 def display_all():
     manager.sort()
-    display_box.delete("1.0", "end")
+    display_box.delete("1.0", "end") # Empties display_box
     for movie in manager.get_movies():
-        string = f"{movie.get_movie_id()} - {movie.get_movie_name()} \n"
+        string = f"{movie.get_movie_id()} - {movie.get_movie_name()} \n" # Prints all movies with ID - Movie_Name
         display_box.insert(INSERT, string)
 
 def find_movie():
-    movie = manager.find_movie(option.get(), find_movie_entry.get().strip())
+    # Attempts to find a movie given the combo_box criteria and the entry.
+    # If a valid ID or name is found, Movie is returned.
+    # If a valid country, duration, genre, or rating is found, Movies will be printed to display_box.
+    # Else: user is told movie with ID or name is not found, or nothing is printed to display_box.
+    movie = manager.find_movie(drop_down_list.get(), find_movie_entry.get().strip()) 
     if movie == False:
         find_movie_entry.delete(0, END)
-        find_movie_entry.insert(0,"Invalid Entry.")
+        find_movie_entry.insert(0,"Movie Not Found.")
+    elif isinstance(movie, movie_management.movie.Movie):
+        empty()
+        movie_id_entry.insert(0, movie.get_movie_id())
+        movie_name_entry.insert(0, movie.get_movie_name())
+        country_name_entry.insert(0, movie.get_country_name())
+        duration_entry.insert(0, movie.get_duration())
+        genre_entry.insert(0, movie.get_genre())
+        rating_entry.insert(0, movie.get_rating().upper())
+    elif isinstance(movie, list):
+        display_box.delete("1.0", "end")
+        if len(movie) == 0:
+            display_box.insert(INSERT, "No Movies Found.")
+        else:
+            movie = sorted(movie, key=lambda m: m.get_movie_id())
+            for m in movie:
+                string = f"{m.get_movie_id()} - {m.get_movie_name()} \n"
+                display_box.insert(INSERT, string)
 
-    empty()
-    movie_id_entry.insert(0, movie.get_movie_id())
-    movie_name_entry.insert(0, movie.get_movie_name())
-    country_name_entry.insert(0, movie.get_country_name())
-    duration_entry.insert(0, movie.get_duration())
-    genre_entry.insert(0, movie.get_genre())
-    rating_entry.insert(0, movie.get_rating().upper())
+    
 
 """
 manager = MovieManagement()
@@ -282,17 +299,12 @@ font(find_movie_entry)
 find_movie_entry.place(x=450, y=550)
 find_movie_button = Button(root, text="Find Movie", command=find_movie)
 font(find_movie_button)
-find_movie_button.place(x=575, y=620)
+find_movie_button.place(x=610, y=590)
 
-# Radiobuttons
-option = IntVar()
-by_id_radiobutton = Radiobutton(root, text="By ID", variable=option, value=0)
-by_id_radiobutton.place(x=450, y=600)
-font(by_id_radiobutton)
-
-by_name_radiobutton = Radiobutton(root, text="By Name", variable=option, value=1)
-by_name_radiobutton.place(x=450, y=650)
-font(by_name_radiobutton)
+#Drop_Down_List
+drop_down_list = ttk.Combobox(root, values=["ID", "Name", "Country Name", "Duration", "Genre", "Rating"])
+drop_down_list.place(x=400, y=600)
+font(drop_down_list)
 
 main_entry_widgets = [movie_id_entry, movie_name_entry, country_name_entry, 
                             duration_entry, genre_entry, rating_entry]

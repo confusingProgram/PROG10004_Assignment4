@@ -1,4 +1,5 @@
 from data_persistence import DataPersistence
+import movie
 from movie import Movie
 
 
@@ -28,15 +29,42 @@ class MovieManagement:
             if movie_id == movie.get_movie_id():
                 self._movies.remove(movie)
 
+
+#drop_down_list = ttk.Combobox(root, values=["ID", "Name", "Country Name", "Duration", "Genre", "Rating"])
+    
     def find_movie(self, option, entry):
-        if option == 0:
+        if option == "ID":
             for movie in self._movies:
                 if entry == movie.get_movie_id():
                     return movie
-        elif option == 1:
+        elif option == "Name":
             for movie in self._movies:
                 if entry == movie.get_movie_name():
                     return movie
+        elif option == "Country Name":
+            sub_list = []
+            for movie in self._movies:
+                if movie.get_country_name().upper() == entry.upper():
+                    sub_list.append(movie)
+            return sub_list
+        elif option == "Duration":
+            sub_list = []
+            for movie in self._movies:
+                if movie.get_duration() == entry:
+                    sub_list.append(movie)
+            return sub_list
+        elif option == "Genre":
+            sub_list = []
+            for movie in self._movies:
+                if movie.get_genre().upper() == entry.upper():
+                    sub_list.append(movie)
+            return sub_list
+        elif option == "Rating":
+            sub_list = []
+            for movie in self._movies:
+                if movie.get_rating().upper() == entry.upper():
+                    sub_list.append(movie)
+            return sub_list
         return False
                 
     def get_movies(self):
