@@ -122,7 +122,7 @@ def find_movie():
         find_movie_entry.delete(0, END)
         find_movie_entry.insert(0,"Movie Not Found.")
     elif isinstance(movie, movie_management.movie.Movie):
-        empty()
+        empty() # If a Movie is returned (i.e., ID or name criteria), print Movie information
         movie_id_entry.insert(0, movie.get_movie_id())
         movie_name_entry.insert(0, movie.get_movie_name())
         country_name_entry.insert(0, movie.get_country_name())
@@ -130,11 +130,11 @@ def find_movie():
         genre_entry.insert(0, movie.get_genre())
         rating_entry.insert(0, movie.get_rating().upper())
     elif isinstance(movie, list):
-        display_box.delete("1.0", "end")
+        display_box.delete("1.0", "end") # If a list of Movies is returned (i.e., non-ID or non-name criteria), print list of Movies
         if len(movie) == 0:
-            display_box.insert(INSERT, "No Movies Found.")
+            display_box.insert(INSERT, "No Movies Found.") # If null list, print that no movies were found.
         else:
-            movie = sorted(movie, key=lambda m: m.get_movie_id())
+            movie = sorted(movie, key=lambda m: int(m.get_movie_id()))
             for m in movie:
                 string = f"{m.get_movie_id()} - {m.get_movie_name()} \n"
                 display_box.insert(INSERT, string)
@@ -171,8 +171,7 @@ display_box = Text()
 display_all_button = Button()
 find_movie_entry = Entry()
 find_movie_button = Button()
-by_id_radiobutton = Radiobutton()
-by_name_radiobutton = Radiobutton()
+drop_down_list = Combobox()
 main_entry_widgets = []
 """
 

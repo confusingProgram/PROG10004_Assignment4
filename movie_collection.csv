@@ -1,7 +1,16 @@
-movie_id,movie_name,country_name,duration,genre,rating
-1,Spirited Away,Japan,100,Fantasy,G
-123,Free Guy,United States of America,99,Comedy,14A
-124,Howl's Moving Castle,Japan,119,Fantasy,G
-125,Hot Fuzz,United Kingdom,121,Action,14A
-126,Shaun of the Dead,United Kingdom,99,Action,14A
-127,Five Night's at Freddy's,United States of America,109,Horror,14A
+movie_id,movie_name,country_name,duration,genre,rating
+
+1,Spirited Away,Japan,100,Fantasy,G
+
+2,Kiki's Delivery Service,Japan,99,Fantasy,G
+
+123,Free Guy,United States of America,99,Comedy,14A
+
+124,Howl's Moving Castle,Japan,119,Fantasy,G
+
+125,Hot Fuzz,United Kingdom,121,Action,14A
+
+126,Shaun of the Dead,United Kingdom,99,Action,14A
+
+127,Five Night's at Freddy's,United States of America,109,Horror,14A
+
